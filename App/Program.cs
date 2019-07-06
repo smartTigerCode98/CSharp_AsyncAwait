@@ -6,20 +6,18 @@ namespace App
 {
     class Program
     {
-        static  void Main(string[] args)
+        static void Main(string[] args)
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token;
-            ShowCurrentTimeAsync(token);
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
+            PrintCurrentTimeAsync(token);
             Console.ReadKey();
-            cancellationTokenSource.Cancel();
-            ConfirmExit(token);
+            ConfirmExitAsync(token);
             Console.ReadKey();
-            cancellationTokenSource.Cancel();
-            Console.ReadKey();
+            cts.Cancel();
         }
 
-        private static void ShowCurrentTime()
+        private static void PrintCurrentTime()
         {
             while (true)
             { 
@@ -28,22 +26,20 @@ namespace App
             }
         }
 
-        private static async Task ShowCurrentTimeAsync(CancellationToken cancellationToken)
+        private static async Task PrintCurrentTimeAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() => ShowCurrentTime(), cancellationToken);
-            if (cancellationToken.IsCancellationRequested)
-            {
-                Console.WriteLine("Cancellation request");
+            if (!cancellationToken.IsCancellationRequested)
+            { 
+                await Task.Run(() => PrintCurrentTime(), cancellationToken);
             }
         }
 
-        private static async Task ConfirmExit(CancellationToken cancellationToken)
+        private static async Task ConfirmExitAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() => Console.WriteLine("thanks a lot for using our service," +
-                                                   " press any key to confirm exit"), cancellationToken);
-            if (cancellationToken.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested)
             {
-                Console.WriteLine("Cancellation request");
+                await Task.Run(() => Console.WriteLine("Thanks a lot for using our service," +
+                                                       " press any key to confirm exit"), cancellationToken);
             }
         }
     }
