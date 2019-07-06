@@ -44,7 +44,6 @@ namespace App
             if (cancellationToken.IsCancellationRequested)
             {
                 Console.WriteLine("Cancellation request");
-                
             }
         }
     }
