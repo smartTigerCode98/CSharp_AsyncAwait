@@ -16,21 +16,19 @@ namespace App
             Console.ReadKey();
             cts.Cancel();
         }
-
-        private static void PrintCurrentTime()
-        {
-            while (true)
-            { 
-                Console.WriteLine($"Current date and time is {DateTime.Now}");
-                Thread.Sleep(8000);
-            }
-        }
-
+        
         private static async Task PrintCurrentTimeAsync(CancellationToken cancellationToken)
         {
             if (!cancellationToken.IsCancellationRequested)
             { 
-                await Task.Run(() => PrintCurrentTime(), cancellationToken);
+                while (true)
+                { 
+                    await Task.Run(() => 
+                    {
+                        Console.WriteLine($"Current date and time is {DateTime.Now}");
+                    }, cancellationToken);
+                    Thread.Sleep(8000);
+                }
             }
         }
 
