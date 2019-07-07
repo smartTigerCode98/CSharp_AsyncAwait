@@ -19,12 +19,16 @@ namespace App
         
         private static async Task PrintCurrentTimeAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await Task.Run(() => { Console.WriteLine($"Current date and time is {DateTime.Now}"); },
-                        cancellationToken);
-                Thread.Sleep(8000);
-            }
+            var task = Task.Run(() =>
+                {
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        Console.WriteLine($"Current date and time is {DateTime.Now}");
+                        Thread.Sleep(8000);
+                    }
+                },
+                cancellationToken);
+            await task;
         }
 
         private static async Task ConfirmExitAsync(CancellationToken cancellationToken)
